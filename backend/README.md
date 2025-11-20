@@ -1,4 +1,4 @@
-# Pixel-Perfect Backend (Django) — Simple ML
+#  Backend (Django) — Simple ML
 
 This is a lightweight Django backend for the Pixel-Perfect project (real-estate analysis chatbot style).
 It implements:
