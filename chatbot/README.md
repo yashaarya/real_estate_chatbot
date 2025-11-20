@@ -1,73 +1,45 @@
-# Welcome to your Lovable project
+🏡 Real Estate Chatbot
 
-## Project info
+A simple AI-powered web application that predicts property prices and answers real-estate questions through a chatbot interface.
 
-**URL**: https://lovable.dev/projects/2c6bc4c4-c31e-4232-b755-eb051c39769a
+🚀 Features
 
-## How can I edit this code?
+💬 Chatbot for real-estate queries
 
-There are several ways of editing your application.
+📈 Price prediction using ML model
 
-**Use Lovable**
+🌐 React frontend
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/2c6bc4c4-c31e-4232-b755-eb051c39769a) and start prompting.
+🛠️ Django/FastAPI backend
 
-Changes made via Lovable will be committed automatically to this repo.
+🔗 API for predictions & chatbot responses
 
-**Use your preferred IDE**
+📁 Project Structure
+backend/      → API + ML model
+frontend/     → React UI
+README.md
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+▶️ How to Run
+Backend
+cd backend
+pip install -r requirements.txt
+python manage.py runserver
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+Frontend
+cd frontend
+npm install
 npm run dev
-```
 
-**Edit a file directly in GitHub**
+📡 API (Examples)
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+POST /api/predict → Get price prediction
 
-**Use GitHub Codespaces**
+POST /api/chat → Get chatbot response
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+🛠️ Tech Stack
 
-## What technologies are used for this project?
+React, Vite
 
-This project is built with:
+Django REST / FastAPI
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/2c6bc4c4-c31e-4232-b755-eb051c39769a) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Scikit-Learn, Pandas
