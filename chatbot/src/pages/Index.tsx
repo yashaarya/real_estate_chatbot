@@ -100,31 +100,21 @@ const Index = () => {
   ];
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex min-h-dvh flex-col bg-background lg:flex-row">
       {/* Left Side - Chat Interface */}
-      <div className="flex flex-col w-full lg:w-1/2 border-r border-border">
+      <div className="flex min-h-0 w-full flex-1 flex-col border-border lg:w-1/2 lg:border-r">
         {/* Header */}
-        <div className="flex items-center gap-3 p-4 border-b border-border bg-card shadow-sm">
+        <div className="flex items-center gap-3 border-b border-border bg-card p-3 shadow-sm sm:p-4">
           <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
             <Building2 className="w-6 h-6 text-primary-foreground" />
           </div>
           <div>
             <h1 className="text-lg font-bold text-foreground">Real Estate Analysis</h1>
-            <p className="text-xs text-muted-foreground">Powered by AI</p>
           </div>
         </div>
 
-        {/* File Upload Section */}
-        <div className="p-4 border-b border-border">
-          <FileUpload
-            onDataLoaded={handleDataLoaded}
-            onReset={handleResetData}
-            hasUploadedData={hasUploadedData}
-          />
-        </div>
-
         {/* Messages Area */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <div className="flex-1 space-y-3 overflow-y-auto p-3 sm:space-y-4 sm:p-4">
           {messages.map((msg, idx) => (
             <ChatMessage key={idx} message={msg.text} isUser={msg.isUser} />
           ))}
@@ -147,14 +137,14 @@ const Index = () => {
 
         {/* Quick Query Buttons */}
         {messages.length === 1 && (
-          <div className="px-4 pb-3 flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 px-3 pb-3 sm:px-4"> 
             {quickQueries.map((query, idx) => (
               <Button
                 key={idx}
                 variant="outline"
                 size="sm"
                 onClick={() => setInput(query)}
-                className="text-xs"
+                className="whitespace-nowrap text-xs"
               >
                 {query}
               </Button>
@@ -163,7 +153,7 @@ const Index = () => {
         )}
 
         {/* Input Area */}
-        <form onSubmit={handleSubmit} className="p-4 border-t border-border bg-card">
+        <form onSubmit={handleSubmit} className="border-t border-border bg-card p-3 sm:p-4">
           <div className="flex gap-2">
             <Input
               value={input}
@@ -180,8 +170,17 @@ const Index = () => {
       </div>
 
       {/* Right Side - Visualizations */}
-      <div className="hidden lg:flex flex-col w-1/2 bg-muted/30">
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+      <div className="flex min-h-0 w-full flex-1 flex-col border-border bg-muted/30 lg:w-1/2 lg:border-l">
+        {/* File Upload Section */}
+        <div className="border-b border-border p-3 sm:p-4">
+          <FileUpload
+            onDataLoaded={handleDataLoaded}
+            onReset={handleResetData}
+            hasUploadedData={hasUploadedData}
+          />
+        </div>
+
+        <div className="flex-1 space-y-4 overflow-y-auto p-3 sm:space-y-6 sm:p-6">
           {currentAnalysis && currentAnalysis.chartData.length > 0 ? (
             <>
               <AnalysisChart
@@ -197,16 +196,16 @@ const Index = () => {
               <DataTable data={currentAnalysis.tableData} />
             </>
           ) : (
-            <div className="flex items-center justify-center h-full">
-              <div className="text-center space-y-3">
-                <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+            <div className="flex min-h-[320px] items-center justify-center py-10">
+              <div className="space-y-3 text-center">
+                <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-primary/20 to-accent/20">
                   <TrendingUp className="w-10 h-10 text-primary" />
                 </div>
                 <h2 className="text-xl font-semibold text-foreground">
                   Start Analyzing
                 </h2>
-                <p className="text-sm text-muted-foreground max-w-sm">
-                  Ask about any locality to see detailed charts, trends, and data tables here.
+                <p className="mx-auto max-w-sm text-sm text-muted-foreground">
+                  Upload a spreadsheet or send a query to explore price and demand trends across areas.
                 </p>
               </div>
             </div>

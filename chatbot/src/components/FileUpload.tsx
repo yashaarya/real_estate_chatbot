@@ -62,8 +62,8 @@ export const FileUpload = ({ onDataLoaded, onReset, hasUploadedData }: FileUploa
   };
 
   return (
-    <Card className={cn("shadow-md", hasUploadedData && "border-accent")}>
-      <CardContent className="p-4">
+    <Card className={cn("shadow-md", hasUploadedData && "border-accent")} >
+      <CardContent className="p-1"> 
         <div className="flex flex-col gap-3">
           <div className="flex items-center gap-2">
             <FileSpreadsheet className="w-5 h-5 text-primary" />

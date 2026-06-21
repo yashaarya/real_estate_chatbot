@@ -37,20 +37,20 @@ export const DataTable = ({ data }: DataTableProps) => {
   };
 
   return (
-    <Card className="shadow-lg">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <div>
+    <Card className="shadow-lg"> 
+      <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
           <CardTitle>Filtered Data</CardTitle>
           <CardDescription>{data.length} records found</CardDescription>
         </div>
-        <Button onClick={downloadCSV} variant="outline" size="sm">
+        <Button onClick={downloadCSV} variant="outline" size="sm" className="w-full sm:w-auto">
           <Download className="w-4 h-4 mr-2" />
           Download CSV
         </Button>
       </CardHeader>
       <CardContent>
-        <div className="rounded-md border">
-          <Table>
+        <div className="overflow-x-auto rounded-md border">
+          <Table className="min-w-[720px]">
             <TableHeader>
               <TableRow>
                 <TableHead>Year</TableHead>

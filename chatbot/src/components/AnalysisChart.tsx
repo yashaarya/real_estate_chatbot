@@ -23,6 +23,20 @@ export const AnalysisChart = ({ data, type, areas }: AnalysisChartProps) => {
   if (data.length === 0) return null;
 
   const isComparison = areas.length > 1;
+  const comparisonBarData = isComparison
+    ? Array.from(new Set(data.map((item) => item.year)))
+        .sort((a, b) => a - b)
+        .map((year) => {
+          const row: Record<string, string | number> = { year };
+
+          areas.forEach((area) => {
+            row[area] = data.find((item) => item.year === year && item.area === area)?.demand ?? 0;
+          });
+
+          return row;
+        })
+    : data;
+  const comparisonColors = ["hsl(var(--chart-1))", "hsl(var(--chart-2))", "hsl(var(--chart-3))"];
 
   return (
     <Card className="shadow-lg">
@@ -76,7 +90,7 @@ export const AnalysisChart = ({ data, type, areas }: AnalysisChartProps) => {
               )}
             </LineChart>
           ) : (
-            <BarChart data={data}>
+            <BarChart data={comparisonBarData}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
               <XAxis dataKey="year" className="text-muted-foreground" />
               <YAxis className="text-muted-foreground" />
@@ -88,12 +102,24 @@ export const AnalysisChart = ({ data, type, areas }: AnalysisChartProps) => {
                 }}
               />
               <Legend />
-              <Bar
-                dataKey="demand"
-                name="Demand Index"
-                fill="hsl(var(--chart-2))"
-                radius={[8, 8, 0, 0]}
-              />
+              {isComparison ? (
+                areas.map((area, idx) => (
+                  <Bar
+                    key={area}
+                    dataKey={area}
+                    name={`${area} Demand`}
+                    fill={comparisonColors[idx % comparisonColors.length]}
+                    radius={[8, 8, 0, 0]}
+                  />
+                ))
+              ) : (
+                <Bar
+                  dataKey="demand"
+                  name="Demand Index"
+                  fill="hsl(var(--chart-2))"
+                  radius={[8, 8, 0, 0]}
+                />
+              )}
             </BarChart>
           )}
         </ResponsiveContainer>
