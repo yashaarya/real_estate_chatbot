@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
-import { Upload, FileSpreadsheet, Download, X } from "lucide-react";
+import { Upload, FileSpreadsheet, Download, X, CheckCircle2, FileUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { parseExcelFile, generateSampleExcel } from "@/utils/excelParser";
 import { RealEstateData } from "@/data/realEstateData";
 import { toast } from "sonner";
@@ -13,12 +14,14 @@ interface FileUploadProps {
   hasUploadedData: boolean;
 }
 
+const REQUIRED_COLUMNS = ["year", "area", "avgPrice", "demand", "avgSize", "transactions"];
+
 export const FileUpload = ({ onDataLoaded, onReset, hasUploadedData }: FileUploadProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
-  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+  const processFile = async (file: File) => {
     if (!file) return;
 
     setIsProcessing(true);
@@ -38,11 +41,36 @@ export const FileUpload = ({ onDataLoaded, onReset, hasUploadedData }: FileUploa
       console.error("File upload error:", error);
     } finally {
       setIsProcessing(false);
-      // Reset file input
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
     }
+  };
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) processFile(file);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isDragging) setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const file = e.dataTransfer.files?.[0];
+    if (file) processFile(file);
   };
 
   const handleDownloadSample = () => {
@@ -62,64 +90,111 @@ export const FileUpload = ({ onDataLoaded, onReset, hasUploadedData }: FileUploa
   };
 
   return (
-    <Card className={cn("shadow-md", hasUploadedData && "border-accent")} >
-      <CardContent className="p-1"> 
-        <div className="flex flex-col gap-3">
-          <div className="flex items-center gap-2">
-            <FileSpreadsheet className="w-5 h-5 text-primary" />
-            <div className="flex-1">
-              <h3 className="font-semibold text-sm">
-                {hasUploadedData ? "Custom Dataset Active" : "Upload Your Data"}
-              </h3>
-              <p className="text-xs text-muted-foreground">
-                {hasUploadedData
-                  ? "Using your uploaded Excel file"
-                  : "Upload Excel file with real estate data"}
-              </p>
-            </div>
-          </div>
+    <Card
+      className={cn(
+        "transition-all duration-200 border shadow-sm",
+        hasUploadedData ? "border-primary/50 bg-primary/5" : "border-border hover:border-muted-foreground/30"
+      )}
+    >
+      <CardContent className="p-3 sm:p-4">
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".xlsx,.xls,.csv"
+          onChange={handleFileSelect}
+          className="hidden"
+          disabled={isProcessing}
+        />
 
-          <div className="flex flex-wrap gap-2">
-            {hasUploadedData ? (
-              <Button onClick={handleReset} variant="outline" size="sm" className="flex-1">
-                <X className="w-4 h-4 mr-2" />
-                Use Demo Data
+        {hasUploadedData ? (
+          /* Active State View */
+          <div className="space-y-3">
+            <div className="flex items-start sm:items-center justify-between gap-3">
+              <div className="flex items-start sm:items-center gap-2.5 min-w-0">
+                <div className="p-2 rounded-lg bg-primary/10 text-primary">
+                  <CheckCircle2 className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-sm leading-none mb-1">Custom Dataset Active</h3>
+                  <p className="text-xs text-muted-foreground">Currently displaying uploaded Excel data</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-stretch gap-2 pt-1">
+              <Button
+                onClick={() => fileInputRef.current?.click()}
+                variant="outline"
+                size="sm"
+                disabled={isProcessing}
+                className="flex-1 text-xs h-8 w-full"
+              >
+                <FileUp className="w-3.5 h-3.5 mr-1.5" />
+                Replace File
               </Button>
-            ) : (
-              <>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".xlsx,.xls,.csv"
-                  onChange={handleFileSelect}
-                  className="hidden"
-                  disabled={isProcessing}
-                />
-                <Button
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={isProcessing}
-                  variant="default"
-                  size="sm"
-                  className="flex-1"
-                >
-                  <Upload className="w-4 h-4 mr-2" />
-                  {isProcessing ? "Processing..." : "Upload Excel"}
-                </Button>
-                <Button onClick={handleDownloadSample} variant="outline" size="sm">
-                  <Download className="w-4 h-4 mr-2" />
-                  Sample
-                </Button>
-              </>
-            )}
-          </div>
-
-          {!hasUploadedData && (
-            <div className="text-xs text-muted-foreground bg-muted/50 rounded p-2">
-              <p className="font-medium mb-1">Required columns:</p>
-              <p>year, area, avgPrice, demand, avgSize, transactions</p>
+              <Button onClick={handleReset} variant="ghost" size="sm" className="flex-1 text-xs h-8 w-full text-muted-foreground hover:text-destructive">
+                <X className="w-3.5 h-3.5 mr-1.5" />
+                Reset to Demo
+              </Button>
             </div>
-          )}
-        </div>
+          </div>
+        ) : (
+          /* Upload State View */
+          <div className="space-y-1">
+            {/* Header section */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+               
+                <div>
+                  <h3 className="font-semibold text-sm leading-none mb-1">Upload Data</h3>
+                  <p className="text-xs text-muted-foreground">Import your real estate metrics</p>
+                </div>
+              <Button
+                onClick={handleDownloadSample}
+                variant="ghost"
+                size="sm"
+                className="text-xs text-muted-foreground hover:text-white h-8 px-2 self-start sm:self-auto"
+              >
+                <Download className="w-3.5 h-3.5 mr-1" />
+                Sample
+              </Button>
+            </div>
+
+            {/* Dropzone area */}
+            <div
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              onClick={() => fileInputRef.current?.click()}
+              className={cn(
+                "border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-colors flex flex-col items-center justify-center gap-1.5 min-h-[140px] sm:min-h-[unset]",
+                isDragging
+                  ? "border-primary bg-primary/5"
+                  : "border-muted-foreground/25 hover:border-primary/50 hover:bg-muted/40",
+                isProcessing && "opacity-50 pointer-events-none"
+              )}
+            >
+              <Upload className="w-5 h-3 text-muted-foreground" />
+              <div className="text-xs">
+                <span className="font-medium text-primary">Click to upload</span> or drag and drop
+              </div>
+              <p className="text-[10px] text-muted-foreground">Supports .xlsx, .xls, .csv</p>
+            </div>
+
+            {/* Expected Columns Indicator */}
+            <div className="space-y-1.5 pt-1">
+              <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider block">
+                Required Columns
+              </span>
+              <div className="flex flex-wrap gap-1">
+                {REQUIRED_COLUMNS.map((col) => (
+                  <Badge key={col} variant="secondary" className="text-[10px] px-1.5 py-0 font-mono font-normal">
+                    {col}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
