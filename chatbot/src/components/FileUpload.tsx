@@ -1,8 +1,21 @@
 import { useRef, useState } from "react";
-import { Upload, FileSpreadsheet, Download, X, CheckCircle2, FileUp } from "lucide-react";
+import {
+  Upload,
+  Download,
+  X,
+  CheckCircle2,
+  FileUp,
+  Info,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { parseExcelFile, generateSampleExcel } from "@/utils/excelParser";
 import { RealEstateData } from "@/data/realEstateData";
 import { toast } from "sonner";
@@ -14,9 +27,20 @@ interface FileUploadProps {
   hasUploadedData: boolean;
 }
 
-const REQUIRED_COLUMNS = ["year", "area", "avgPrice", "demand", "avgSize", "transactions"];
+const REQUIRED_COLUMNS = [
+  "year",
+  "area",
+  "avgPrice",
+  "demand",
+  "avgSize",
+  "transactions",
+];
 
-export const FileUpload = ({ onDataLoaded, onReset, hasUploadedData }: FileUploadProps) => {
+export const FileUpload = ({
+  onDataLoaded,
+  onReset,
+  hasUploadedData,
+}: FileUploadProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -32,9 +56,13 @@ export const FileUpload = ({ onDataLoaded, onReset, hasUploadedData }: FileUploa
 
       if (result.success && result.data) {
         onDataLoaded(result.data);
-        toast.success(`Successfully loaded ${result.rowCount} records!`, { id: "excel-parse" });
+        toast.success(`Successfully loaded ${result.rowCount} records!`, {
+          id: "excel-parse",
+        });
       } else {
-        toast.error(result.error || "Failed to parse file", { id: "excel-parse" });
+        toast.error(result.error || "Failed to parse file", {
+          id: "excel-parse",
+        });
       }
     } catch (error) {
       toast.error("An unexpected error occurred", { id: "excel-parse" });
@@ -92,11 +120,14 @@ export const FileUpload = ({ onDataLoaded, onReset, hasUploadedData }: FileUploa
   return (
     <Card
       className={cn(
-        "transition-all duration-200 border shadow-sm",
-        hasUploadedData ? "border-primary/50 bg-primary/5" : "border-border hover:border-muted-foreground/30"
+        "border bg-card/80 backdrop-blur-md shadow-sm transition-all duration-300",
+        "hover:shadow-md hover:border-primary/30",
+        hasUploadedData
+          ? "border-primary/40 bg-primary/5"
+          : "border-border/70"
       )}
     >
-      <CardContent className="p-3 sm:p-4">
+      <CardContent className="p-4 sm:p-5">
         <input
           ref={fileInputRef}
           type="file"
@@ -107,7 +138,6 @@ export const FileUpload = ({ onDataLoaded, onReset, hasUploadedData }: FileUploa
         />
 
         {hasUploadedData ? (
-          /* Active State View */
           <div className="space-y-3">
             <div className="flex items-start sm:items-center justify-between gap-3">
               <div className="flex items-start sm:items-center gap-2.5 min-w-0">
@@ -115,8 +145,12 @@ export const FileUpload = ({ onDataLoaded, onReset, hasUploadedData }: FileUploa
                   <CheckCircle2 className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-sm leading-none mb-1">Custom Dataset Active</h3>
-                  <p className="text-xs text-muted-foreground">Currently displaying uploaded Excel data</p>
+                  <h3 className="font-semibold text-[15px] tracking-tight leading-none mb-1">
+                    Custom Dataset Active
+                  </h3>
+                  <p className="text-xs text-muted-foreground">
+                    Currently displaying uploaded Excel data
+                  </p>
                 </div>
               </div>
             </div>
@@ -132,66 +166,128 @@ export const FileUpload = ({ onDataLoaded, onReset, hasUploadedData }: FileUploa
                 <FileUp className="w-3.5 h-3.5 mr-1.5" />
                 Replace File
               </Button>
-              <Button onClick={handleReset} variant="ghost" size="sm" className="flex-1 text-xs h-8 w-full text-muted-foreground hover:text-destructive">
+
+              <Button
+                onClick={handleReset}
+                variant="ghost"
+                size="sm"
+                className="flex-1 text-xs h-8 w-full text-muted-foreground hover:text-destructive"
+              >
                 <X className="w-3.5 h-3.5 mr-1.5" />
                 Reset to Demo
               </Button>
             </div>
           </div>
         ) : (
-          /* Upload State View */
-          <div className="space-y-1">
-            {/* Header section */}
+          <div className="space-y-3">
+            {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-               
-                <div>
-                  <h3 className="font-semibold text-sm leading-none mb-1">Upload Data</h3>
-                  <p className="text-xs text-muted-foreground">Import your real estate metrics</p>
-                </div>
+              <div>
+                <h3 className="font-semibold text-[15px] tracking-tight leading-none mb-1">
+                  Upload Your Dataset
+                </h3>
+                <p className="text-xs text-muted-foreground">
+                  Import your real estate metrics to get AI-powered insights.
+                </p>
+              </div>
+
               <Button
                 onClick={handleDownloadSample}
-                variant="ghost"
+                variant="outline"
                 size="sm"
-                className="text-xs text-muted-foreground hover:text-white h-8 px-2 self-start sm:self-auto"
+                className="text-xs h-8 px-3 self-start sm:self-auto"
               >
-                <Download className="w-3.5 h-3.5 mr-1" />
-                Sample
+                <Download className="w-3.5 h-3.5 mr-1.5" />
+                Try Sample Data
               </Button>
             </div>
 
-            {/* Dropzone area */}
+            {/* Dropzone */}
             <div
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
               className={cn(
-                "border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-colors flex flex-col items-center justify-center gap-1.5 min-h-[140px] sm:min-h-[unset]",
+                "border-2 border-dashed rounded-xl px-4 py-5 sm:py-6 text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-2 min-h-[145px]",
                 isDragging
-                  ? "border-primary bg-primary/5"
-                  : "border-muted-foreground/25 hover:border-primary/50 hover:bg-muted/40",
+                  ? "border-primary bg-primary/10 shadow-sm scale-[1.01]"
+                  : "border-muted-foreground/20 hover:border-primary/50 hover:bg-primary/[0.03]",
                 isProcessing && "opacity-50 pointer-events-none"
               )}
             >
-              <Upload className="w-5 h-3 text-muted-foreground" />
-              <div className="text-xs">
-                <span className="font-medium text-primary">Click to upload</span> or drag and drop
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary ring-1 ring-primary/10">
+                <Upload className="w-5 h-5" />
               </div>
-              <p className="text-[10px] text-muted-foreground">Supports .xlsx, .xls, .csv</p>
+
+              <div className="text-sm">
+                <span className="font-semibold text-primary">
+                  Drop your dataset here
+                </span>
+                <span className="text-muted-foreground"> or </span>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    fileInputRef.current?.click();
+                  }}
+                  className="font-semibold text-foreground underline underline-offset-2 hover:text-primary"
+                >
+                  Browse Files
+                </button>
+              </div>
+
+              <p className="text-[11px] text-muted-foreground">
+                XLSX • XLS • CSV
+              </p>
             </div>
 
-            {/* Expected Columns Indicator */}
-            <div className="space-y-1.5 pt-1">
-              <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider block">
-                Required Columns
+            {/* Dataset requirements - hidden until info icon is clicked */}
+            <div className="flex items-center justify-center gap-1.5 pt-1">
+              <span className="text-[11px] text-muted-foreground">
+                Dataset requirements
               </span>
-              <div className="flex flex-wrap gap-1">
-                {REQUIRED_COLUMNS.map((col) => (
-                  <Badge key={col} variant="secondary" className="text-[10px] px-1.5 py-0 font-mono font-normal">
-                    {col}
-                  </Badge>
-                ))}
-              </div>
+
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      className="text-muted-foreground hover:text-primary transition-colors"
+                      aria-label="Show required dataset columns"
+                    >
+                      <Info className="w-3.5 h-3.5" />
+                    </button>
+                  </TooltipTrigger>
+
+                  <TooltipContent
+                    side="bottom"
+                    align="center"
+                    className="max-w-xs p-3"
+                  >
+                    <div className="space-y-2">
+                      <p className="text-xs font-semibold">
+                        Required columns
+                      </p>
+                      <p className="text-[11px] text-muted-foreground">
+                        Your file must contain these columns for AI analysis
+                        and visualizations to work correctly.
+                      </p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {REQUIRED_COLUMNS.map((col) => (
+                          <Badge
+                            key={col}
+                            variant="secondary"
+                            className="text-[10px] px-1.5 py-0.5 font-mono font-normal"
+                          >
+                            {col}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </div>
         )}
