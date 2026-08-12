@@ -20,10 +20,10 @@ export const ChatMessage = ({
   disabled = false,
 }: ChatMessageProps) => {
   const defaultQueries = [
-    "Analyze Pune",
-    "Compare demand across areas",
-    "Which area has the highest average price?",
-    "Show price trends",
+    "Analyze Wakad",
+    "Compare demand in Wakad and Hinjewadi",
+    "Compare prices in Aundh and Baner",
+    "Show price trends for Ambegaon Budruk",
   ];
 
   const queriesToShow = exampleQueries && exampleQueries.length > 0 ? exampleQueries : defaultQueries;

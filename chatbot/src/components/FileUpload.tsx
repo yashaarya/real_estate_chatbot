@@ -120,11 +120,11 @@ export const FileUpload = ({
   return (
     <Card
       className={cn(
-        "border bg-card/80 backdrop-blur-md shadow-sm transition-all duration-300",
-        "hover:shadow-md hover:border-primary/30",
+        "border-0 bg-card/80 backdrop-blur-md shadow-sm transition-all duration-300",
+        "hover:shadow-md",
         hasUploadedData
-          ? "border-primary/40 bg-primary/5"
-          : "border-border/70"
+          ? "bg-primary/5"
+          : ""
       )}
     >
       <CardContent className="p-4 sm:p-5">

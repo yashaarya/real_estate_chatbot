@@ -137,26 +137,35 @@ const Index = () => {
 
   /* ---------------- EXAMPLE QUERIES ---------------- */
 
+  const datasetAreas = Array.from(
+    new Set(currentDataset.map((data) => data.area))
+  ).sort();
+  const firstArea = datasetAreas[0] ?? "Wakad";
+  const secondArea = datasetAreas[1] ?? firstArea;
+  const thirdArea = datasetAreas[2] ?? secondArea;
+
   const exampleQueries = [
-    "Analyze Pune",
-    "Compare demand across areas",
-    "Which area has the highest average price?",
-    "Show price trends",
+    `Analyze ${firstArea}`,
+    `Compare demand in ${firstArea} and ${secondArea}`,
+    `Compare prices in ${secondArea} and ${thirdArea}`,
+    `Show price trends for ${thirdArea}`,
   ];
 
   return (
-    <div className="h-dvh overflow-hidden bg-background text-foreground font-sans">
+    <div className="min-h-dvh overflow-x-hidden bg-background text-foreground font-sans">
 
       {/* ================= HEADER ================= */}
 
       <header className="flex h-14 shrink-0 items-center justify-between gap-3 border-b border-border bg-card px-4 sm:px-6 shadow-sm backdrop-blur-xl dark:border-sky-500/15 dark:bg-card/70 z-20">
 
         <div className="flex items-center gap-3 min-w-0">
-          <img
-            src={logo}
-            alt="EstateIQ Logo"
-            className="h-8 w-8 shrink-0 object-contain"
-          />
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white p-1 shadow-sm ring-1 ring-black/5">
+            <img
+              src={logo}
+              alt="EstateIQ Logo"
+              className="h-full w-full object-contain"
+            />
+          </div>
 
           <h1 className="truncate text-lg sm:text-xl font-bold text-foreground tracking-tight">
             EstateIQ
@@ -187,25 +196,25 @@ const Index = () => {
 
       {/* ================= MAIN ================= */}
 
-      <main className="h-[calc(100dvh-3.5rem)] overflow-y-auto bg-background lg:snap-y lg:snap-mandatory">
+      <main className="bg-background lg:h-[calc(100dvh-3.5rem)] lg:overflow-y-auto lg:snap-y lg:snap-mandatory">
 
         {/* ================= UPLOAD SECTION ================= */}
 
         <section className="min-h-[calc(100dvh-3.5rem)] w-full px-3 sm:px-6 lg:px-8 py-3 sm:py-4 lg:py-5 bg-slate-200 dark:bg-background lg:snap-start">
 
-          <div className="mx-auto flex min-h-[calc(100dvh-3.5rem)] w-full max-w-[1600px] flex-col rounded-2xl sm:rounded-3xl border border-border bg-card shadow-sm backdrop-blur-xl overflow-hidden dark:border-white/10 dark:bg-[#131f33]/75 dark:shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
+          <div className="mx-auto flex min-h-[calc(100dvh-3.5rem)] w-full max-w-[1600px] flex-col rounded-2xl sm:rounded-3xl bg-card shadow-sm backdrop-blur-xl overflow-hidden dark:bg-[#131f33]/75 dark:shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
 
             <div className="flex flex-1 items-center justify-center p-4 sm:p-8 lg:p-10">
 
-              <div className="w-full max-w-3xl rounded-2xl border border-border bg-background/85 p-4 sm:p-6 lg:p-8 shadow-sm backdrop-blur-md dark:border-white/10 dark:bg-white/5">
+              <div className="welcome-card w-full max-w-3xl rounded-2xl p-4 sm:p-6 lg:p-8 backdrop-blur-md">
 
                 <div className="mb-6 text-center">
 
-                  <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-foreground">
+                  <h2 className="bg-gradient-to-r from-primary via-cyan-500 to-teal-500 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-4xl lg:text-5xl">
                     Welcome to EstateIQ
                   </h2>
 
-                  <p className="mt-2 text-sm sm:text-base text-muted-foreground">
+                  <p className="mt-3 text-base sm:text-lg text-muted-foreground">
                     Import real estate data to unlock AI insights, charts, and comparisons.
                   </p>
 
@@ -224,13 +233,13 @@ const Index = () => {
 
         {/* ================= CHAT + VISUALIZATION ================= */}
 
-        <section className="h-[calc(100dvh-3.5rem)] w-full px-3 sm:px-6 lg:px-8 py-3 sm:py-6 lg:py-10 bg-slate-200 dark:bg-background lg:snap-start overflow-hidden">
+        <section className="min-h-[calc(100dvh-3.5rem)] w-full px-3 py-3 sm:px-6 sm:py-6 lg:h-[calc(100dvh-3.5rem)] lg:px-8 lg:py-10 bg-slate-200 dark:bg-background lg:snap-start lg:overflow-hidden">
 
-          <div className="mx-auto flex h-full w-full max-w-[1600px] flex-col lg:flex-row gap-4 sm:gap-6 overflow-hidden min-h-0">
+          <div className="mx-auto flex min-h-[calc(100dvh-7rem)] w-full max-w-[1600px] flex-col gap-4 sm:gap-6 lg:h-full lg:min-h-0 lg:flex-row lg:overflow-hidden">
 
             {/* ================= AI ASSISTANT ================= */}
 
-            <aside className="flex h-full w-full flex-col rounded-2xl border border-border bg-card shadow-sm backdrop-blur-xl overflow-hidden shrink-0 lg:w-[400px] lg:basis-[400px] min-h-0 dark:border-white/10 dark:bg-[#131f33]/75 dark:shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
+            <aside className="flex h-[min(620px,78dvh)] w-full flex-col rounded-2xl border border-border bg-card shadow-sm backdrop-blur-xl overflow-hidden shrink-0 lg:h-full lg:w-[400px] lg:basis-[400px] min-h-0 dark:border-white/10 dark:bg-[#131f33]/75 dark:shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
 
               <div className="p-4 border-b border-border bg-muted/10 flex items-center justify-between shrink-0 dark:border-white/10 dark:bg-white/5">
 
@@ -277,17 +286,6 @@ const Index = () => {
                 {/* CHAT MESSAGES */}
 
                 {messages.map((msg, idx) => {
-                  const areas = Array.from(
-                    new Set(currentDataset.map((d) => d.area))
-                  ).sort();
-
-                  const datasetExampleQueries = [
-                    areas[0] ? `Analyze ${areas[0]}` : "Analyze an area",
-                    "Compare demand across areas",
-                    "Which area has the highest average price?",
-                    "Show price trends",
-                  ];
-
                   return (
                     <ChatMessage
                       key={idx}
@@ -295,7 +293,7 @@ const Index = () => {
                       isUser={msg.isUser}
                       showExampleQueries={!msg.isUser && idx === 0}
                       onExampleQuery={(q) => runQuery(q)}
-                      exampleQueries={datasetExampleQueries}
+                      exampleQueries={exampleQueries}
                       disabled={isProcessing}
                     />
                   );
@@ -355,7 +353,7 @@ const Index = () => {
 
             {/* ================= VISUALIZATION ================= */}
 
-            <section className="flex-1 h-full flex flex-col rounded-2xl border border-border bg-card shadow-sm backdrop-blur-xl overflow-hidden min-w-0 min-h-0 dark:border-white/10 dark:bg-[#131f33]/75 dark:shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
+            <section className="flex min-h-[520px] w-full flex-1 flex-col rounded-2xl border border-border bg-card shadow-sm backdrop-blur-xl overflow-hidden min-w-0 lg:h-full lg:min-h-0 dark:border-white/10 dark:bg-[#131f33]/75 dark:shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
 
               <div className="p-4 border-b border-border bg-muted/10 flex items-center justify-between shrink-0 dark:border-white/10 dark:bg-white/5">
 
@@ -426,7 +424,7 @@ const Index = () => {
 
                 ) : (
 
-                  <div className="flex h-full min-h-[280px] sm:min-h-[350px] flex-col items-center justify-center text-center px-2">
+                  <div className="flex h-full min-h-[420px] sm:min-h-[350px] flex-col items-center justify-center text-center px-2">
 
                     <div className="mx-auto flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full bg-slate-100 dark:bg-sky-500/10 mb-4 border shadow-sm dark:border-sky-500/20">
 

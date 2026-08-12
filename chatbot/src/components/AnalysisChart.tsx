@@ -40,8 +40,8 @@ export const AnalysisChart = ({ data, type, areas }: AnalysisChartProps) => {
 
   return (
     <Card className="shadow-lg">
-      <CardHeader>
-        <CardTitle>
+      <CardHeader className="space-y-1 p-4 sm:p-6">
+        <CardTitle className="text-base sm:text-lg">
           {type === "price" ? "Price Trends" : type === "demand" ? "Demand Trends" : "Comparative Analysis"}
         </CardTitle>
         <CardDescription>
@@ -50,9 +50,10 @@ export const AnalysisChart = ({ data, type, areas }: AnalysisChartProps) => {
             : `Historical data for ${areas[0]}`}
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <ResponsiveContainer width="100%" height={300}>
-          {type === "price" ? (
+      <CardContent className="p-2 pt-0 sm:p-6 sm:pt-0">
+        <div className="h-60 sm:h-[300px]">
+          <ResponsiveContainer width="100%" height="100%">
+            {type === "price" ? (
             <LineChart data={data}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
               <XAxis dataKey="year" className="text-muted-foreground" />
@@ -62,7 +63,10 @@ export const AnalysisChart = ({ data, type, areas }: AnalysisChartProps) => {
                   backgroundColor: "hsl(var(--card))",
                   border: "1px solid hsl(var(--border))",
                   borderRadius: "var(--radius)",
+                  color: "hsl(var(--foreground))",
                 }}
+                labelStyle={{ color: "hsl(var(--foreground))" }}
+                itemStyle={{ color: "hsl(var(--foreground))" }}
               />
               <Legend />
               {isComparison ? (
@@ -99,7 +103,10 @@ export const AnalysisChart = ({ data, type, areas }: AnalysisChartProps) => {
                   backgroundColor: "hsl(var(--card))",
                   border: "1px solid hsl(var(--border))",
                   borderRadius: "var(--radius)",
+                  color: "hsl(var(--foreground))",
                 }}
+                labelStyle={{ color: "hsl(var(--foreground))" }}
+                itemStyle={{ color: "hsl(var(--foreground))" }}
               />
               <Legend />
               {isComparison ? (
@@ -121,8 +128,9 @@ export const AnalysisChart = ({ data, type, areas }: AnalysisChartProps) => {
                 />
               )}
             </BarChart>
-          )}
-        </ResponsiveContainer>
+            )}
+          </ResponsiveContainer>
+        </div>
       </CardContent>
     </Card>
   );

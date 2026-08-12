@@ -2,9 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
 */
+
+@layer components {
+  .welcome-card {
+    background:
+      radial-gradient(circle at 8% 4%, hsl(183 92% 86% / 0.96), transparent 42%),
+      radial-gradient(circle at 96% 96%, hsl(212 88% 88% / 0.78), transparent 45%),
+      linear-gradient(145deg, hsl(0 0% 100%), hsl(207 46% 92%));
+    box-shadow:
+      18px 18px 36px hsl(215 28% 70% / 0.28),
+      -14px -14px 30px hsl(0 0% 100% / 0.9),
+      inset 1px 1px 0 hsl(0 0% 100% / 0.95);
+  }
+
+  .dark .welcome-card {
+    background:
+      radial-gradient(circle at 8% 4%, hsl(186 85% 41% / 0.48), transparent 44%),
+      radial-gradient(circle at 95% 96%, hsl(258 76% 46% / 0.32), transparent 48%),
+      linear-gradient(145deg, hsl(218 42% 20%), hsl(221 50% 10%));
+    box-shadow:
+      18px 18px 36px hsl(220 55% 4% / 0.58),
+      -12px -12px 28px hsl(205 55% 31% / 0.2),
+      inset 1px 1px 0 hsl(210 70% 75% / 0.1);
+  }
+}
 
 @layer base {
   :root {
@@ -91,11 +117,11 @@ All colors MUST be HSL.
     --input: 218 28% 22%;
     --ring: 200 100% 62%;
 
-    --chart-1: 200 100% 62%;
-    --chart-2: 199 92% 68%;
-    --chart-3: 205 88% 64%;
-    --chart-4: 213 82% 66%;
-    --chart-5: 196 76% 58%;
+    --chart-1: 187 92% 54%;
+    --chart-2: 265 88% 72%;
+    --chart-3: 38 96% 62%;
+    --chart-4: 332 86% 70%;
+    --chart-5: 145 68% 57%;
 
     --gradient-primary: linear-gradient(135deg, hsl(200 100% 62%), hsl(199 92% 68%));
     --gradient-accent: linear-gradient(135deg, hsl(218 38% 14%), hsl(218 30% 19%));
@@ -125,6 +151,7 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Manrope', sans-serif;
     min-height: 100vh;
   }
 
